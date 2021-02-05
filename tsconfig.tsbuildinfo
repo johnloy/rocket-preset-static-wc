@@ -802,8 +802,8 @@
         "affectsGlobalScope": false
       },
       "./src/index.ts": {
-        "version": "6da1d7fdce0202cee2059052aa585481e6ac7a8793edab6a2d4aa883f481b5e3",
-        "signature": "e75082ee1d601d774b5b45b2add4f5bed4b7fb73c109ea2b2006c07adfdf3f04",
+        "version": "d247b325055571a3f6a782e4eb6f41e60583eedd2d4c8684f91e41650ce0e694",
+        "signature": "2062e645cc92a7d190a58c422e8f37399d48880f7172ea222fc250d2a4e16b30",
         "affectsGlobalScope": false
       },
       "./node_modules/@types/babel-types/ts3.6/index.d.ts": {
@@ -895,7 +895,8 @@
       "declarationMap": true,
       "esModuleInterop": true,
       "forceConsistentCasingInFileNames": true,
-      "module": 1,
+      "moduleResolution": 2,
+      "module": 99,
       "outDir": "./dist",
       "rootDir": "./src",
       "skipLibCheck": true,
@@ -1394,8 +1395,7 @@
         "./node_modules/plugins-manager/dist-types/index.d.ts",
         "./node_modules/rehype-parse/types/index.d.ts",
         "./node_modules/unified/types/ts4.0/index.d.ts",
-        "./node_modules/unist-util-visit/types/index.d.ts",
-        "./src/global.d.ts"
+        "./node_modules/unist-util-visit/types/index.d.ts"
       ]
     },
     "exportedModulesMap": {
@@ -1880,9 +1880,6 @@
       "./node_modules/vfile/types/index.d.ts": [
         "./node_modules/@types/unist/index.d.ts",
         "./node_modules/vfile-message/types/index.d.ts"
-      ],
-      "./src/index.ts": [
-        "./node_modules/@rocket/cli/dist-types/types/main.d.ts"
       ]
     },
     "semanticDiagnosticsPerFile": [
@@ -2062,7 +2059,19 @@
       "./node_modules/vfile-message/types/index.d.ts",
       "./node_modules/vfile/types/index.d.ts",
       "./src/global.d.ts",
-      "./src/index.ts"
+      [
+        "./src/index.ts",
+        [
+          {
+            "file": "./src/index.ts",
+            "start": 240,
+            "length": 43,
+            "messageText": "Cannot find module '@rocket/cli/src/public/computedConfig.cjs' or its corresponding type declarations.",
+            "category": 1,
+            "code": 2307
+          }
+        ]
+      ]
     ]
   },
   "version": "4.1.3"

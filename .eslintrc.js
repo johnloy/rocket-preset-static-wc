@@ -20,7 +20,7 @@ module.exports = {
 
     'html',
     'markdown',
-    'tsdoc',
+    'jsdoc',
   ],
   extends: [
     'eslint:recommended',
@@ -28,11 +28,11 @@ module.exports = {
     'prettier',
     'prettier/@typescript-eslint',
     'plugin:prettier/recommended',
+    'plugin:jsdoc/recommended',
   ],
   rules: {
     'prettier/prettier': 'error',
     '@typescript-eslint/no-var-requires': 0,
-    'tsdoc/syntax': 'warn',
   },
   settings: {
     node: {

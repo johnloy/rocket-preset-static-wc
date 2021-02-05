@@ -1,3 +1,3 @@
-import preset from './dist/index.js'
+import preset from './src/index.js'
 
 export { preset as staticCustomElements }

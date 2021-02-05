@@ -1,19 +1,21 @@
-import glob from 'fast-glob'
-import path from 'path'
-import { addPlugin } from 'plugins-manager'
-import parse from 'rehype-parse'
-import unified from 'unified'
-import unistUtilVisit from 'unist-util-visit'
-import { getComputedConfig } from '@rocket/cli'
-import { RocketPreset as preset } from '@rocket/cli/dist-types/types/main'
+const glob = require('fast-glob')
+const path = require('path')
+const { addPlugin } = require('plugins-manager')
+const parse = require('rehype-parse')
+const unified = require('unified')
+const unistUtilVisit = require('unist-util-visit')
+const { getComputedConfig } = require('@rocket/cli')
 
-interface PluginOptions {
-  customElementFiles: string[]
-}
+/** @typedef {import('@rocket/cli/dist-types/types/main').RocketPreset} RocketPreset */
 
-interface Renderable {
-  render(): string
-}
+/**
+ * @typedef {Object} PluginOptions
+ * @property {string[]} customElementFiles - An array of glob patterns to locate modules exporting custom elements
+ */
+
+ /**
+  * @typedef {{render: () => string}} Renderable
+  */
 
 const htmlStringToHast = unified().use(parse, { fragment: true }).parse
 
@@ -21,17 +23,26 @@ const DEFAULT_OPTIONS = {
   customElementFiles: ['**/*.{js,mjs}'],
 }
 
-let componentFiles: string[] = []
-let componentFilesIndex: Record<string, string>
-let componentsIndex: Record<string, new () => Renderable>
-let changedComponent: string | null
+/** @type {string[]} */
+let componentFiles = []
+
+/** @type {Record<string, string>} */
+let componentFilesIndex
+
+/** @type {Record<string, new () => Renderable>} */
+let componentsIndex 
+
+/** @type {string | null} */
+let changedComponent
 
 /**
  * The UnifiedJS plugin attacher function
  *
- * @param options - Options
+ * @param {PluginOptions} options - Options
+ * @this {import('unified').Parser}
+ * @returns {import('unified').Transformer} - A UnifiedJS transformer function
  */
-function renderCustomElement(this: unified.Processor, options: PluginOptions): unified.Transformer {
+function renderCustomElement(options) {
   const { customElementFiles } = options
 
   const rocketConfig = getComputedConfig()
@@ -46,20 +57,25 @@ function renderCustomElement(this: unified.Processor, options: PluginOptions): u
   }
 
   return async (tree) => {
-    const missingDefaultExport: string[] = []
+    /** @type {string[]} */
+    const missingDefaultExport = []
 
     if (!componentsIndex) {
       componentsIndex = Object.fromEntries(
         (
           await Promise.all(
             /** Concurrently dynamically import all possible modules export web components */
-            Object.entries(componentFilesIndex).map(async ([name, filePath]: [string, string]) => {
-              const { default: Component } = await import(filePath)
-              if (Component) {
-                return [name, Component]
+            /** @type {Array<Promise<[string, new () => Renderable]>>} */(
+            Object.entries(componentFilesIndex).map(
+              /** @param {[string, string]} */ 
+              async ([name, filePath]) => {
+                const { default: Component } = await import(filePath)
+                if (Component) {
+                  return [name, Component]
+                }
+                missingDefaultExport.push(name)
               }
-              missingDefaultExport.push(name)
-            }) as Array<Promise<[string, new () => Renderable]>>
+            ))
           )
         ).filter((entry) => entry)
       )
@@ -82,7 +98,7 @@ function renderCustomElement(this: unified.Processor, options: PluginOptions): u
 
     /** Recursively replace web component nodes with rendered output */
     unistUtilVisit(tree, (node) => {
-      const Component = componentsIndex[node.tagName as string]
+      const Component = componentsIndex[/** @type {string} */(node.tagName)]
 
       if (Component) {
         const instance = new Component()
@@ -92,7 +108,12 @@ function renderCustomElement(this: unified.Processor, options: PluginOptions): u
   }
 }
 
-export function staticCustomElements(userOptions = {}): Partial<preset> {
+/**
+ * 
+ * @param {PluginOptions | {}} [userOptions={}] 
+ * @returns {Partial<RocketPreset>}
+ */
+module.exports = function staticCustomElements(userOptions = {}) {
   const options = { ...DEFAULT_OPTIONS, ...userOptions }
 
   return {
@@ -100,8 +121,9 @@ export function staticCustomElements(userOptions = {}): Partial<preset> {
     setupEleventyPlugins: [
       addPlugin({
         name: 'track-changed-files',
-        plugin: function trackChangedFiles(eleventyConfig: EleventyConfig) {
-          eleventyConfig.on('beforeWatch', (changedFiles: string[]) => {
+        plugin: 
+        function trackChangedFiles(/** @type {EleventyConfig} */ eleventyConfig) {
+          eleventyConfig.on('beforeWatch', (/** @type {string[]} */ changedFiles) => {
             changedComponent = null
             for (const relPath of changedFiles) {
               if (componentFiles.includes(path.resolve(relPath))) {

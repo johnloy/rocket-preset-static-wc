@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "start": "rocket start",
+    "build": "rocket build"
+  }
+}
