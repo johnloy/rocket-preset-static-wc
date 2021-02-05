@@ -1,0 +1,100 @@
+{
+  "name": "rocket-preset-static-wc",
+  "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "Preset adding web component static rendering for https://rocket.modern-web.dev/",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnloy/rocket-preset-static-wc.git"
+  },
+  "author": "",
+  "homepage": "https://github.com/johnloy/rocket-preset-static-wc#readme",
+  "bugs": {
+    "url": "https://github.com/johnloy/rocket-preset-static-wc/issues"
+  },
+  "main": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "build": "tsc",
+    "format": "run-s format:*",
+    "format:eslint": "eslint --ext .js,.ts,.html,.md . --fix",
+    "format:prettier": "prettier \"**/*.{js,ts,html,md}\" \"**/package.json\" --write",
+    "lint": "run-s lint:*",
+    "lint:eslint": "eslint --ext .js,.ts,.html,.md .",
+    "lint:prettier": "prettier \"**/*.{js,ts,html,md}\" \"**/package.json\" --check",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "11ty",
+    "ast",
+    "rehype",
+    "remark",
+    "retext",
+    "rocket",
+    "rollup",
+    "ssg",
+    "unified",
+    "web-components",
+    "lit-html",
+    "lit-element"
+  ],
+  "dependencies": {
+    "@rocket/cli": "^0.5.1",
+    "fast-glob": "^3.2.5",
+    "npm-run-all": "^4.1.5",
+    "plugins-manager": "^0.2.0",
+    "rehype-parse": "^7.0.1",
+    "unified": "^9.2.0"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.14.1",
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^8.2.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.2",
+    "@typescript-eslint/parser": "^4.14.2",
+    "chai": "^4.3.0",
+    "eslint": "^7.19.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-html": "^6.1.1",
+    "eslint-plugin-jsdoc": "^31.6.0",
+    "eslint-plugin-markdown": "^1.0.2",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-tsdoc": "^0.2.11",
+    "husky": "^4.3.8",
+    "lint-staged": "^10.5.3",
+    "mocha": "^8.2.1",
+    "prettier": "^2.2.1",
+    "prettier-plugin-package": "^1.3.0",
+    "typescript": "^4.1.3",
+    "unist-util-visit": "^2.0.3"
+  },
+  "contributors": [
+    "John Loy <loy.john@gmail.com> (https://frameworkless-web.dev)"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,ts,html,md}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "package.json": [
+      "prettier --write"
+    ]
+  }
+}
